@@ -9,7 +9,7 @@ import (
 type cliCommand struct {
 	name        string
 	description string
-	callback    func() error
+	callback    func(*config) error
 }
 
 func getCommands() map[string]cliCommand {
@@ -37,9 +37,27 @@ func getCommands() map[string]cliCommand {
 	}
 }
 
+type PokeAPIMapResponse struct {
+	Count    int    `json:"count"`
+	Next     string `json:"next"`
+	Previous string `json:"previous"`
+	Results  []struct {
+		Name string `json:"name"`
+		URL  string `json:"url"`
+	} `json:"results"`
+}
+
+type config struct {
+	PreviousMap string
+	NextMap     string
+	BaseURL     string
+}
+
 func mainLoop() {
 	scanner := bufio.NewScanner(os.Stdin)
 	cmds := getCommands()
+	cfg := config{}
+	cfg.BaseURL = "https://pokeapi.co/api/v2/"
 
 	for {
 		fmt.Print("pokedex > ")
@@ -50,7 +68,7 @@ func mainLoop() {
 			fmt.Println("command not recognized.")
 			continue
 		}
-		err := cmds[cmd].callback()
+		err := cmds[cmd].callback(&cfg)
 
 		if err != nil {
 			println("An error has occurred.")

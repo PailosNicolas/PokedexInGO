@@ -7,18 +7,15 @@ import (
 	"net/http"
 )
 
-type PokeAPIMapResponse struct {
-	Count    int    `json:"count"`
-	Next     string `json:"next"`
-	Previous any    `json:"previous"`
-	Results  []struct {
-		Name string `json:"name"`
-		URL  string `json:"url"`
-	} `json:"results"`
-}
+func commandMap(cfg *config) error {
+	var url string
 
-func commandMap() error {
-	res, err := http.Get("https://pokeapi.co/api/v2/location/")
+	if cfg.NextMap != "" {
+		url = cfg.NextMap
+	} else {
+		url = cfg.BaseURL + "location/"
+	}
+	res, err := http.Get(url)
 
 	if err != nil {
 		return errors.New("error obtaining locations from api")
@@ -37,6 +34,12 @@ func commandMap() error {
 
 	maps := PokeAPIMapResponse{}
 	json.Unmarshal(body, &maps)
+
+	cfg.NextMap = maps.Next
+
+	cfg.PreviousMap = maps.Previous
+
+	println(cfg.PreviousMap == "")
 
 	for _, a := range maps.Results {
 		println(a.Name)
