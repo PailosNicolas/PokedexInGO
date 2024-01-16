@@ -9,27 +9,36 @@ import (
 
 func commandMap(cfg *config) error {
 	var url string
+	var body []byte
 
 	if cfg.NextMap != "" {
 		url = cfg.NextMap
 	} else {
 		url = cfg.BaseURL + "location/"
 	}
-	res, err := http.Get(url)
 
-	if err != nil {
-		return errors.New("error obtaining locations from api")
-	}
+	if entry, ok := cfg.Cache.GetEntry(url); ok {
+		body = entry
+	} else {
+		res, err := http.Get(url)
 
-	body, err := io.ReadAll(res.Body)
-	res.Body.Close()
+		if err != nil {
+			return errors.New("error obtaining locations from api")
+		}
 
-	if res.StatusCode > 299 {
-		return errors.New("response failed ")
-	}
+		body, err = io.ReadAll(res.Body)
+		res.Body.Close()
 
-	if err != nil {
-		return errors.New("error reading locations from api")
+		if res.StatusCode > 299 {
+			return errors.New("response failed ")
+		}
+
+		if err != nil {
+			return errors.New("error reading locations from api")
+		}
+
+		cfg.Cache.AddEntry(url, body)
+
 	}
 
 	maps := PokeAPIMapResponse{}

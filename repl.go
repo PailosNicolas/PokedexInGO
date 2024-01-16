@@ -4,6 +4,9 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"time"
+
+	"github.com/PailosNicolas/PokedexInGO/cache"
 )
 
 type cliCommand struct {
@@ -51,6 +54,7 @@ type config struct {
 	PreviousMap string
 	NextMap     string
 	BaseURL     string
+	Cache       cache.Cache
 }
 
 func mainLoop() {
@@ -58,6 +62,8 @@ func mainLoop() {
 	cmds := getCommands()
 	cfg := config{}
 	cfg.BaseURL = "https://pokeapi.co/api/v2/"
+	interval := time.Minute * 5
+	cfg.Cache = cache.NewCache(interval)
 
 	for {
 		fmt.Print("pokedex > ")
