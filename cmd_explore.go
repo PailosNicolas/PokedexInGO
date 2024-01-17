@@ -3,8 +3,8 @@ package main
 import (
 	"encoding/json"
 	"errors"
-	"io"
-	"net/http"
+
+	"github.com/PailosNicolas/PokedexInGO/requesthelper"
 )
 
 type PokeAPILocationResponse struct {
@@ -91,6 +91,8 @@ type PokeAPIAreaResponse struct {
 }
 
 func commandExplore(cfg *config, args ...string) error {
+	var err error
+
 	if len(args) == 0 {
 		return errors.New("missing argument")
 	}
@@ -102,21 +104,10 @@ func commandExplore(cfg *config, args ...string) error {
 	url := cfg.BaseURL + "location/" + args[0]
 	var body []byte
 
-	res, err := http.Get(url)
+	body, err = requesthelper.MakeRequestGet(url)
 
 	if err != nil {
-		return errors.New("error obtaining location from api")
-	}
-
-	body, err = io.ReadAll(res.Body)
-	res.Body.Close()
-
-	if res.StatusCode > 299 {
-		return errors.New("response failed ")
-	}
-
-	if err != nil {
-		return errors.New("error reading location from api")
+		return err
 	}
 
 	explore := PokeAPILocationResponse{}
@@ -127,14 +118,8 @@ func commandExplore(cfg *config, args ...string) error {
 	}
 
 	for _, area := range explore.Areas {
-		resArea, err := http.Get(area.URL)
 
-		if err != nil {
-			return errors.New("error obtaining area from api")
-		}
-
-		body, err = io.ReadAll(resArea.Body)
-		res.Body.Close()
+		body, err = requesthelper.MakeRequestGet(area.URL)
 
 		if err != nil {
 			return errors.New("error obtaining area from api")

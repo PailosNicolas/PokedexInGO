@@ -3,12 +3,13 @@ package main
 import (
 	"encoding/json"
 	"errors"
-	"io"
-	"net/http"
+
+	"github.com/PailosNicolas/PokedexInGO/requesthelper"
 )
 
 func commandMapb(cfg *config, args ...string) error {
 	var body []byte
+	var err error
 
 	if cfg.PreviousMap == "" {
 		return errors.New("there is no previous map list")
@@ -17,21 +18,10 @@ func commandMapb(cfg *config, args ...string) error {
 	if entry, ok := cfg.Cache.GetEntry(cfg.PreviousMap); ok {
 		body = entry
 	} else {
-		res, err := http.Get(cfg.PreviousMap)
+		body, err = requesthelper.MakeRequestGet(cfg.PreviousMap)
 
 		if err != nil {
-			return errors.New("error obtaining locations from api")
-		}
-
-		body, err = io.ReadAll(res.Body)
-		res.Body.Close()
-
-		if res.StatusCode > 299 {
-			return errors.New("response failed ")
-		}
-
-		if err != nil {
-			return errors.New("error reading locations from api")
+			return err
 		}
 
 		cfg.Cache.AddEntry(cfg.PreviousMap, body)
