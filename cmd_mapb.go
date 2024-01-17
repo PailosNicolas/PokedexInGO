@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func commandMapb(cfg *config) error {
+func commandMapb(cfg *config, args ...string) error {
 	var body []byte
 
 	if cfg.PreviousMap == "" {

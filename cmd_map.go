@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func commandMap(cfg *config) error {
+func commandMap(cfg *config, args ...string) error {
 	var url string
 	var body []byte
 
@@ -47,8 +47,6 @@ func commandMap(cfg *config) error {
 	cfg.NextMap = maps.Next
 
 	cfg.PreviousMap = maps.Previous
-
-	println(cfg.PreviousMap == "")
 
 	for _, a := range maps.Results {
 		println(a.Name)
