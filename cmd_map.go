@@ -2,14 +2,14 @@ package main
 
 import (
 	"encoding/json"
-	"errors"
-	"io"
-	"net/http"
+
+	"github.com/PailosNicolas/PokedexInGO/requesthelper"
 )
 
 func commandMap(cfg *config, args ...string) error {
 	var url string
 	var body []byte
+	var err error
 
 	if cfg.NextMap != "" {
 		url = cfg.NextMap
@@ -20,21 +20,10 @@ func commandMap(cfg *config, args ...string) error {
 	if entry, ok := cfg.Cache.GetEntry(url); ok {
 		body = entry
 	} else {
-		res, err := http.Get(url)
+		body, err = requesthelper.MakeRequestGet(url)
 
 		if err != nil {
-			return errors.New("error obtaining locations from api")
-		}
-
-		body, err = io.ReadAll(res.Body)
-		res.Body.Close()
-
-		if res.StatusCode > 299 {
-			return errors.New("response failed ")
-		}
-
-		if err != nil {
-			return errors.New("error reading locations from api")
+			return err
 		}
 
 		cfg.Cache.AddEntry(url, body)
