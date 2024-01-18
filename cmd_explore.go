@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"slices"
 
 	"github.com/PailosNicolas/PokedexInGO/requesthelper"
 )
@@ -93,6 +94,7 @@ type PokeAPIAreaResponse struct {
 func commandExplore(cfg *config, args ...string) error {
 	var err error
 	var body []byte
+	var pokemonsInArea []string
 
 	if len(args) == 0 {
 		return errors.New("missing argument")
@@ -133,8 +135,14 @@ func commandExplore(cfg *config, args ...string) error {
 		json.Unmarshal(body, &parsedAreaRes)
 
 		for _, pokemon := range parsedAreaRes.PokemonEncounters {
-			println(pokemon.Pokemon.Name)
+			if !slices.Contains(pokemonsInArea, pokemon.Pokemon.Name) {
+				pokemonsInArea = append(pokemonsInArea, pokemon.Pokemon.Name)
+			}
 		}
+	}
+
+	for _, pokemonName := range pokemonsInArea {
+		println(pokemonName)
 	}
 
 	return nil
