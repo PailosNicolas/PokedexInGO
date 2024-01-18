@@ -10,6 +10,12 @@ import (
 	"github.com/PailosNicolas/PokedexInGO/cache"
 )
 
+type Pokemon struct {
+	ID             int
+	Name           string
+	BaseExperience int
+}
+
 type cliCommand struct {
 	name        string
 	description string
@@ -43,6 +49,11 @@ func getCommands() map[string]cliCommand {
 			description: "Takes a location as an argument and search pokemon in that location.",
 			callback:    commandExplore,
 		},
+		"catch": {
+			name:        "explore",
+			description: "Takes a pokemon name as an argument and tries to catch it.",
+			callback:    commandCatch,
+		},
 	}
 }
 
@@ -57,10 +68,11 @@ type PokeAPIMapResponse struct {
 }
 
 type config struct {
-	PreviousMap string
-	NextMap     string
-	BaseURL     string
-	Cache       cache.Cache
+	PreviousMap     string
+	NextMap         string
+	BaseURL         string
+	Cache           cache.Cache
+	CatchedPokemons []Pokemon
 }
 
 func mainLoop() {
@@ -70,6 +82,7 @@ func mainLoop() {
 	cfg.BaseURL = "https://pokeapi.co/api/v2/"
 	interval := time.Minute * 5
 	cfg.Cache = cache.NewCache(interval)
+	cfg.CatchedPokemons = []Pokemon{}
 
 	for {
 		fmt.Print("pokedex > ")
