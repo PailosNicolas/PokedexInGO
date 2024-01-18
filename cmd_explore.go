@@ -92,6 +92,7 @@ type PokeAPIAreaResponse struct {
 
 func commandExplore(cfg *config, args ...string) error {
 	var err error
+	var body []byte
 
 	if len(args) == 0 {
 		return errors.New("missing argument")
@@ -102,12 +103,15 @@ func commandExplore(cfg *config, args ...string) error {
 	}
 
 	url := cfg.BaseURL + "location/" + args[0]
-	var body []byte
 
-	body, err = requesthelper.MakeRequestGet(url)
+	if entry, ok := cfg.Cache.GetEntry(url); ok {
+		body = entry
+	} else {
+		body, err = requesthelper.MakeRequestGet(url)
 
-	if err != nil {
-		return err
+		if err != nil {
+			return err
+		}
 	}
 
 	explore := PokeAPILocationResponse{}
