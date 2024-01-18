@@ -141,8 +141,9 @@ func commandExplore(cfg *config, args ...string) error {
 		}
 	}
 
+	println("Found Pokemon:")
 	for _, pokemonName := range pokemonsInArea {
-		println(pokemonName)
+		println("- " + pokemonName)
 	}
 
 	return nil
