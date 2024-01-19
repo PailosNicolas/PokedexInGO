@@ -319,17 +319,49 @@ func commandCatch(cfg *config, args ...string) error {
 
 	if catched {
 		pokemon := Pokemon{
-			ID:             pokemonParsed.ID,
-			Name:           pokemonParsed.Name,
-			BaseExperience: pokemonParsed.BaseExperience,
+			Name:   pokemonParsed.Name,
+			Height: pokemonParsed.Height,
+			Weight: pokemonParsed.Weight,
+			// Stats: {
+			// 	Hp:         0,
+			// 	Attack:     0,
+			// 	Defense:    0,
+			// 	SpecialAtk: 0,
+			// 	SpecialDef: 0,
+			// 	Speed:      0,
+			// },
+		}
+
+		for _, pokemon_type := range pokemonParsed.Types {
+			pokemon.Types = append(pokemon.Types, pokemon_type.Type.Name)
+		}
+
+		for _, stat := range pokemonParsed.Stats {
+			switch stat.Stat.Name {
+			case "hp":
+				pokemon.Stats.Hp = stat.BaseStat
+
+			case "attack":
+				pokemon.Stats.Attack = stat.BaseStat
+
+			case "defense":
+				pokemon.Stats.Defense = stat.BaseStat
+
+			case "special-attack":
+				pokemon.Stats.SpecialAtk = stat.BaseStat
+
+			case "special-defense":
+				pokemon.Stats.SpecialDef = stat.BaseStat
+
+			case "speed":
+				pokemon.Stats.Speed = stat.BaseStat
+			}
 		}
 
 		cfg.CatchedPokemons = append(cfg.CatchedPokemons, pokemon)
 
 		println("\nCatched pokemon information:")
-		println("Name: " + pokemon.Name)
-		println("Base EXP:", pokemon.BaseExperience)
-		println("ID", pokemon.ID)
+		pokemon.GetInfo()
 	}
 
 	return nil
