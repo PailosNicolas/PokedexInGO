@@ -322,14 +322,6 @@ func commandCatch(cfg *config, args ...string) error {
 			Name:   pokemonParsed.Name,
 			Height: pokemonParsed.Height,
 			Weight: pokemonParsed.Weight,
-			// Stats: {
-			// 	Hp:         0,
-			// 	Attack:     0,
-			// 	Defense:    0,
-			// 	SpecialAtk: 0,
-			// 	SpecialDef: 0,
-			// 	Speed:      0,
-			// },
 		}
 
 		for _, pokemon_type := range pokemonParsed.Types {
@@ -358,10 +350,7 @@ func commandCatch(cfg *config, args ...string) error {
 			}
 		}
 
-		cfg.CatchedPokemons = append(cfg.CatchedPokemons, pokemon)
-
-		println("\nCatched pokemon information:")
-		pokemon.GetInfo()
+		cfg.CatchedPokemons[pokemon.Name] = pokemon
 	}
 
 	return nil

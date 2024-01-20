@@ -80,6 +80,11 @@ func getCommands() map[string]cliCommand {
 			description: "Takes a pokemon name as an argument and tries to catch it.",
 			callback:    commandCatch,
 		},
+		"inspect": {
+			name:        "inspect",
+			description: "Takes a pokemon name that you have caught and shows its information.",
+			callback:    commandInspect,
+		},
 	}
 }
 
@@ -98,7 +103,7 @@ type config struct {
 	NextMap         string
 	BaseURL         string
 	Cache           cache.Cache
-	CatchedPokemons []Pokemon
+	CatchedPokemons map[string]Pokemon
 }
 
 func mainLoop() {
@@ -108,7 +113,7 @@ func mainLoop() {
 	cfg.BaseURL = "https://pokeapi.co/api/v2/"
 	interval := time.Minute * 5
 	cfg.Cache = cache.NewCache(interval)
-	cfg.CatchedPokemons = []Pokemon{}
+	cfg.CatchedPokemons = make(map[string]Pokemon)
 
 	for {
 		fmt.Print("pokedex > ")
