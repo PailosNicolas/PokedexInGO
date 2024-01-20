@@ -281,6 +281,7 @@ func catchCaculation(pokemon *PokemonPokeapiResponse) bool {
 	println("Throwing a Pokeball at " + pokemon.Name + "\n")
 	if randomNumber >= pokemon.BaseExperience {
 		println(pokemon.Name + " was caught!")
+		println("You may now inspect it with the inspect command.")
 		return true
 	} else {
 		println(pokemon.Name + " escaped!")
