@@ -281,7 +281,6 @@ func catchCaculation(pokemon *PokemonPokeapiResponse) bool {
 	println("Throwing a Pokeball at " + pokemon.Name + "\n")
 	if randomNumber >= pokemon.BaseExperience {
 		println(pokemon.Name + " was caught!")
-		println("You may now inspect it with the inspect command.")
 		return true
 	} else {
 		println(pokemon.Name + " escaped!")
@@ -351,7 +350,15 @@ func commandCatch(cfg *config, args ...string) error {
 			}
 		}
 
-		cfg.CatchedPokemons[pokemon.Name] = pokemon
+		ok := pokemon.SetNickname()
+
+		if ok != nil {
+			return ok
+		}
+
+		cfg.CatchedPokemons[pokemon.NickName] = pokemon
+
+		println("You may now inspect it with the inspect command by it's nickname if he has one.")
 	}
 
 	return nil

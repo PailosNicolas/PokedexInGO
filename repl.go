@@ -11,10 +11,11 @@ import (
 )
 
 type Pokemon struct {
-	Name   string
-	Height int
-	Weight int
-	Stats  struct {
+	NickName string
+	Name     string
+	Height   int
+	Weight   int
+	Stats    struct {
 		Hp         int
 		Attack     int
 		Defense    int
@@ -26,7 +27,10 @@ type Pokemon struct {
 }
 
 func (p Pokemon) GetInfo() {
-	fmt.Printf("Name: %s\n", p.Name)
+	fmt.Printf("Name: %s\n", p.NickName)
+	if p.NickName != p.Name {
+		fmt.Printf("Species: %s\n", p.Name)
+	}
 	fmt.Printf("Height: %d\n", p.Height)
 	fmt.Printf("Weight: %d\n", p.Weight)
 	fmt.Println("Stats:")
@@ -39,6 +43,29 @@ func (p Pokemon) GetInfo() {
 	println("Types:")
 	for _, pokemon_type := range p.Types {
 		fmt.Printf("  - %s\n", pokemon_type)
+	}
+}
+
+func (p *Pokemon) SetNickname() error {
+	scanner := bufio.NewScanner(os.Stdin)
+	for {
+		fmt.Printf("Do you want to give %s a nickname? y/n\n", p.Name)
+		scanner.Scan()
+		answer := scanner.Text()
+
+		switch answer {
+		case "y":
+			fmt.Printf("%s nickname: ", p.Name)
+			scanner.Scan()
+			p.NickName = scanner.Text()
+			return nil
+
+		case "n":
+			p.NickName = p.Name
+			return nil
+		default:
+			println("option not recognized")
+		}
 	}
 }
 
