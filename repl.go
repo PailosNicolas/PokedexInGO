@@ -23,11 +23,16 @@ type Pokemon struct {
 		SpecialDef int
 		Speed      int
 	}
-	Types []string
+	Types   []string
+	IsShiny bool
 }
 
 func (p Pokemon) GetInfo() {
-	fmt.Printf("Name: %s\n", p.NickName)
+	fmt.Printf("Name: %s", p.NickName)
+	if p.IsShiny {
+		fmt.Print(" (Shiny)")
+	}
+	print("\n")
 	if p.NickName != p.Name {
 		fmt.Printf("Species: %s\n", p.Name)
 	}

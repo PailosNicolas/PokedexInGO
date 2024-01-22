@@ -288,6 +288,13 @@ func catchCaculation(pokemon *PokemonPokeapiResponse) bool {
 	}
 }
 
+func shinyCaculation() bool {
+	if num := rand.Intn(8192); num == 0 {
+		return true
+	}
+	return false
+}
+
 func commandCatch(cfg *config, args ...string) error {
 	var err error
 	var body []byte
@@ -354,6 +361,12 @@ func commandCatch(cfg *config, args ...string) error {
 
 		if ok != nil {
 			return ok
+		}
+
+		pokemon.IsShiny = shinyCaculation()
+
+		if pokemon.IsShiny {
+			println("Congratulations it's a shiny!")
 		}
 
 		cfg.CatchedPokemons[pokemon.NickName] = pokemon
