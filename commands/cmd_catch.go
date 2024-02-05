@@ -1,4 +1,4 @@
-package main
+package commands
 
 import (
 	"encoding/json"
@@ -28,7 +28,7 @@ func shinyCaculation() bool {
 	return false
 }
 
-func commandCatch(cfg *config, args ...string) error {
+func CommandCatch(cfg *structs.Config, args ...string) error {
 	var err error
 	var body []byte
 

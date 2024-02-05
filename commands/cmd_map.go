@@ -1,4 +1,4 @@
-package main
+package commands
 
 import (
 	"encoding/json"
@@ -7,7 +7,7 @@ import (
 	"github.com/PailosNicolas/PokedexInGO/structs"
 )
 
-func commandMap(cfg *config, args ...string) error {
+func CommandMap(cfg *structs.Config, args ...string) error {
 	var url string
 	var body []byte
 	var err error

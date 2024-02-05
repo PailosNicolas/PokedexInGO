@@ -1,8 +1,12 @@
-package main
+package commands
 
-import "errors"
+import (
+	"errors"
 
-func commandInspect(cfg *config, args ...string) error {
+	"github.com/PailosNicolas/PokedexInGO/structs"
+)
+
+func CommandInspect(cfg *structs.Config, args ...string) error {
 
 	if len(args) == 0 {
 		return errors.New("missing argument")
