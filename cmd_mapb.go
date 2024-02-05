@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	"github.com/PailosNicolas/PokedexInGO/requesthelper"
+	"github.com/PailosNicolas/PokedexInGO/structs"
 )
 
 func commandMapb(cfg *config, args ...string) error {
@@ -27,7 +28,7 @@ func commandMapb(cfg *config, args ...string) error {
 		cfg.Cache.AddEntry(cfg.PreviousMap, body)
 	}
 
-	maps := PokeAPIMapResponse{}
+	maps := structs.PokeAPIMapResponse{}
 	json.Unmarshal(body, &maps)
 
 	cfg.NextMap = maps.Next

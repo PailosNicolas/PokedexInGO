@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/PailosNicolas/PokedexInGO/requesthelper"
+	"github.com/PailosNicolas/PokedexInGO/structs"
 )
 
 func commandMap(cfg *config, args ...string) error {
@@ -30,7 +31,7 @@ func commandMap(cfg *config, args ...string) error {
 
 	}
 
-	maps := PokeAPIMapResponse{}
+	maps := structs.PokeAPIMapResponse{}
 	json.Unmarshal(body, &maps)
 
 	cfg.NextMap = maps.Next
